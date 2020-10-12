@@ -37,11 +37,12 @@ Do not provide security related data (ssh key, passwords, etc) in your reports.
 
 We would be happy to provide more possibilities to the stack.
 
-However, please keep in mind we are doing this as a best effort, on our free time :family:.
+However, please keep in mind we are doing this as a **best effort**, on our free time :family:.
 We will do our best to at least acknowledge we got your query.
 
 Also, if we consider this may damage the stack (modifications in the engine or the core roles),
-or break the KISS (Keep it simple) effort we are doing on the stack, we may only provide the feature as an addon.
+or break the KISS (Keep it simple) effort we are doing on the stack, we may only provide the feature as an addon,
+or simply refuse the feature.
 
 ## Pull Requests :arrow_heading_down:
 
@@ -140,15 +141,15 @@ can be defined in the role vars. Example: packages names, services names, paths,
 in dedicated files or if needed in a new one. When possible, variables should be optional.
 In any cases, they must be documented in the role readme (and if needed provided commented in the example inventories).
 
-4. All variables related to an equipment_profile should go in group_vars/all/all_equipment/ (global) or in group_vars/equipment_X/ with X the equipment profile name (dedicated).
+4. All variables related to an equipment_profile should go in group_vars/all/equipment_all/ (global) or in group_vars/equipment_X/ with X the equipment profile name (dedicated). These variables must be prefixed by **ep_**.
 
 5. All variables containing jinja2 code must be prefix with *j2_* and stored in group_vars/all/j2_variables/.
 j2_ variables are core of the stack, and should be manipulated with care.
 These are intended to be precedence by user only. If needed, theses variables can be fixed.
 
 6. Also, consider that some variables are specific in BlueBanquise,
-and do not fully follow the standard rules of Ansible: *Equipment_profile* and *Authentication* dictionaries are good example.
-As stated in 4, these dictionaries **must** be set in group_vars/equipment_X/ folders or in group_vars/all/all_equipment/.
+and do not fully follow the standard rules of Ansible.
+As stated in 4, these variables **must** be set in group_vars/equipment_X/ folders or in group_vars/all/equipment_all/.
 Any other usage (for example at host_vars level or extra_vars level) will result in a unpredictable situation, as the stack use a random host of these groups to gather equipment_profile data.
 
 ### Miscellaneous

@@ -8,7 +8,7 @@
   {% if icebergs_system == false %}
 {{iceberg_naming+'1'}}
   {% else %}
-    {% for icb_group in ( groups | select('match','^'+iceberg_naming+'[0-9]+') | list | sort ) %}
+    {% for icb_group in ( groups | select('match','^'+iceberg_naming+'[a-zA-Z0-9]+') | list | sort ) %}
       {% if host in groups[icb_group] %}
 {{icb_group | trim}}
         {% break %}
@@ -21,8 +21,8 @@
 {% macro write_host(host,host_dict,current_iceberg) %}
 
   {%- if host_dict['network_interfaces'] is defined and host_dict['network_interfaces'] is iterable %}
-    {% set host_iceberg = node_current_iceberg(host) %}
-    {% set host_resolution_network = network_interfaces[0].network %}{# equivalent to j2_node_main_resolution_network, but no need for a macro here #}
+    {% set host_iceberg = node_current_iceberg(host) | trim %}
+    {% set host_resolution_network = host_dict['network_interfaces'][0].network %}{# equivalent to j2_node_main_resolution_network, but no need for a macro here #}
     {% set alias_list = [] %}
     {% if host_dict['global_alias'] is defined and host_dict['global_alias'] is not none %}
       {% for alias in host_dict['global_alias'] %}{{ alias_list.append(alias) }}{% endfor %}
@@ -77,9 +77,9 @@
 ## Internal hosts
 
 {% set current_iceberg = j2_current_iceberg %}
-{% for host in range %}
+{% for host in range -%}
 {{ write_host(host,hostvars[host],current_iceberg) }}
-{% endfor %}
+{%- endfor %}
 
 ## External hosts
 

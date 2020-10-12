@@ -1,5 +1,5 @@
 ---
-- name: Gathering OS specific variables
+- name: include_vars ░ Gather OS specific variables
   # This task gathers variables defined in OS specific files.
   #
   # Search vars in:
@@ -19,17 +19,19 @@
         - "vars/{{ ansible_facts.os_family }}.yml"
       skip: true
 
-- name: disklessset tool
-  copy:
-    src: disklessset.py
-    dest: /usr/bin/disklessset
-    mode: 0700
+- name: "package █ Install {{ diskless_packages_to_install | join(' ') }}"
+  package:
+    name: "{{ diskless_packages_to_install }}"
+    state: present
+  tags:
+    - package
 
-- name: Create diskless directories structure
+- name: "file █ Create diskless directories structure"
   file:
     path: "{{ item }}"
     state: directory
     mode: 0755
+    setype: "{{ (ansible_facts.os_family == 'RedHat' and ansible_facts.selinux.status == 'enabled') | ternary('httpd_sys_content_t', omit) }}"
     owner: "{{ diskless_apache_user }}"
     group: "{{ diskless_apache_user }}"
   loop:
@@ -38,9 +40,8 @@
    - /var/www/html/preboot_execution_environment/diskless/images
    - /var/www/html/preboot_execution_environment/diskless/kernels
 
-- name: Install dracut-live
-  package:
-    name: dracut-live
-    state: present
-  tags:
-    - package
+- name: "copy █ disklessset tool"
+  copy:
+    src: disklessset.py
+    dest: /usr/bin/disklessset
+    mode: 0700
