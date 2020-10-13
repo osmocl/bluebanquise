@@ -76,6 +76,19 @@ platforms:
       - name: bbnet
         ipv4_address: '10.10.3.4'    
 
+  - name: login1
+    image: "quay.io/actatux/ansible-${MOLECULE_DISTRO:-centos:8}"
+    override_command: false
+    capabilities:
+      - "SYS_ADMIN"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true    
+    networks:
+      - name: bbnet
+        ipv4_address: '10.10.2.1'    
+
 provisioner:
   name: ansible
   inventory:
