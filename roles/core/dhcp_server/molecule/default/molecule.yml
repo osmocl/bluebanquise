@@ -95,6 +95,6 @@ provisioner:
     links:
       hosts: ../../../../../resources/examples/simple_cluster/inventory/cluster/nodes
       group_vars: ../../../../../resources/examples/simple_cluster/inventory/group_vars
-      host_vars: ../../../../../internal
+      host_vars: ${PWD}
 verifier:
   name: ansible
